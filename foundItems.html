@@ -1,8 +1,13 @@
-<div class="found-items">
+<div ng-if="foundItems.length > 0">
+    <h2>Found Items</h2>
     <ul>
-        <li ng-repeat="item in foundItems">
-            <span>{{ item.name }}</span> - <span>{{ item.short_name }}</span> - <span>{{ item.description }}</span>
-            <button ng-click="onRemove({ index: $index })">Don't want this one!</button>
-        </li>
+      <li ng-repeat="item in foundItems">
+        {{ item.name }} ({{ item.short_name }}): {{ item.description }}
+        <button class="btn btn-sm btn-danger" ng-click="removeItem($index)">Don't want this one!</button>
+      </li>
     </ul>
-</div>
+  </div>
+  
+  <div ng-if="foundItems.length === 0">
+    <h2>Nothing found</h2>
+  </div>
