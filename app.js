@@ -1,4 +1,4 @@
-(function() {
+(function () {
     'use strict';
 
     angular.module('NarrowItDownApp', [])
@@ -9,12 +9,13 @@
     NarrowItDownController.$inject = ['MenuSearchService'];
     function NarrowItDownController(MenuSearchService) {
         var narrowCtrl = this;
+        narrowCtrl.searchTerm = '';
         narrowCtrl.found = [];
 
-        narrowCtrl.narrowItDown = function() {
-            if (narrowCtrl.searchTerm) {
+        narrowCtrl.narrowDown = function () {
+            if (narrowCtrl.searchTerm.trim() !== '') {
                 MenuSearchService.getMatchedMenuItems(narrowCtrl.searchTerm)
-                    .then(function(foundItems) {
+                    .then(function (foundItems) {
                         narrowCtrl.found = foundItems;
                     });
             } else {
@@ -22,7 +23,7 @@
             }
         };
 
-        narrowCtrl.removeItem = function(index) {
+        narrowCtrl.removeItem = function (index) {
             narrowCtrl.found.splice(index, 1);
         };
     }
@@ -31,23 +32,14 @@
     function MenuSearchService($http) {
         var service = this;
 
-        service.getMatchedMenuItems = function(searchTerm) {
+        service.getMatchedMenuItems = function (searchTerm) {
             return $http({
                 method: 'GET',
-                url: 'https://coursera-jhu-default-rtdb.firebaseio.com/menu_items.json'
-            }).then(function(response) {
-                var menuItems = response.data;
-                var foundItems = [];
-
-                for (var key in menuItems) {
-                    if (menuItems.hasOwnProperty(key)) {
-                        var item = menuItems[key];
-                        if (item.description.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1) {
-                            foundItems.push(item);
-                        }
-                    }
-                }
-
+                url: 'https://davids-restaurant.herokuapp.com/menu_items.json'
+            }).then(function (result) {
+                var foundItems = result.data.menu_items.filter(function (item) {
+                    return item.description.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1;
+                });
                 return foundItems;
             });
         };
@@ -55,15 +47,22 @@
 
     function FoundItemsDirective() {
         var ddo = {
-            templateUrl: 'foundItems.html',
             restrict: 'E',
+            templateUrl: 'foundItems.html',
             scope: {
                 foundItems: '<',
                 onRemove: '&'
-            }
+            },
+            controller: FoundItemsDirectiveController,
+            controllerAs: 'list',
+            bindToController: true
         };
 
         return ddo;
+    }
+
+    function FoundItemsDirectiveController() {
+        var list = this;
     }
 
 })();
