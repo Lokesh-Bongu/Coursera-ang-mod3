@@ -15,7 +15,8 @@
   
       narrowDown.getMenuItems = function() {
         if (narrowDown.searchTerm) { // Check if searchTerm has a value
-          MenuSearchService.getMatchedMenuItems(narrowDown.searchTerm)
+          searchTerm = narrowDown.searchTerm.toLowerCase(); // Convert search term to lowercase
+          MenuSearchService.getMatchedMenuItems(searchTerm)
             .then(function(matchedItems) {
               narrowDown.found = matchedItems;
             });
@@ -39,6 +40,8 @@
             if (response.data) {  // Check if response.data has a value
               var foundItems = [];
               for (var item in response.data) {
+                // Convert description to lowercase for case-insensitive search
+                response.data[item].description = response.data[item].description.toLowerCase();
                 if (response.data[item].description.indexOf(searchTerm) !== -1) {
                   foundItems.push(response.data[item]);
                 }
