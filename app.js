@@ -1,96 +1,64 @@
-(function () {
+(function() {
+
     'use strict';
   
-    angular.module('NarrowItDownApp', ['ngResource']) 
+    angular.module('NarrowItDownApp', [])
       .controller('NarrowItDownController', NarrowItDownController)
       .service('MenuSearchService', MenuSearchService)
-      .directive('menuItems', MenuItemsDirective)
-      .constant('ApiBasePath', 'https://coursera-jhu-default-rtdb.firebaseio.com');
+      .directive('foundItems', foundItemsDirective);
   
-      var app = angular.module('NarrowItDownApp', []);
-
-   app.controller('NarrowItDownController', ['$http', function($http) {
-   var narrowDown = this;
-   narrowDown.searchTerm = "";
-   narrowDown.found = []; // Initialize as an empty array
-
-      narrowDown.searchButtonClicked = false;
-      narrowDown.showLoader = false; // Flag to control loader visibility
+    NarrowItDownController.$inject = ['MenuSearchService'];
+    function NarrowItDownController(MenuSearchService) {
+      var narrowDown = this;
+      narrowDown.searchTerm = "";
+      narrowDown.found = [];
   
-      narrowDown.search = function () {
-        narrowDown.searchButtonClicked = true;
-        narrowDown.showLoader = true; // Show loader while fetching data
-  
-        if (narrowDown.searchTerm.trim() === '') {
-          narrowDown.found = [];
-          narrowDown.showLoader = false; // Hide loader if search term is empty
-          return;
-        }
-  
+      narrowDown.getMenuItems = function() {
         MenuSearchService.getMatchedMenuItems(narrowDown.searchTerm)
-          .then(function (foundItems) {
-            narrowDown.found = foundItems;
-            narrowDown.showLoader = false; // Hide loader after receiving data
-            console.log("Found Items:", foundItems); // Log found items
-          })
-          .catch(function (error) {
-            console.error('Error fetching data:', error);
-            narrowDown.found = [];
-            narrowDown.showLoader = false; // Hide loader in case of error
+          .then(function(matchedItems) {
+            narrowDown.found = matchedItems;
           });
       };
   
-      narrowDown.removeItem = function (index) {
+      narrowDown.removeItem = function(index) {
         narrowDown.found.splice(index, 1);
       };
     }
   
-    function getMatchedMenuItems(searchTerm) {
-      console.log("Search Term:", searchTerm); // Log search term
-      return $http({
-        method: "GET",
-        url: (ApiBasePath + "/menu_items.json")
-      }).then(function (result) {
-        if (!result || !result.data || !result.data.menu_items) {
-          return []; // Return an empty array if the response is not as expected
-        }
-        var lowercaseSearchTerm = searchTerm.toLowerCase();
-        var foundItems = result.data.menu_items.filter(function (item) {
-          console.log("Item Description:", item.description); // Log item description
-          var lowercaseDescription = item.description.toLowerCase();
-          return lowercaseDescription.indexOf(lowercaseSearchTerm) !== -1;
-        });
-        console.log("Found Items after filtering:", foundItems); // Log found items after filtering
-        return foundItems;
-      }).catch(function(error) {
-        console.error('Error fetching data:', error);
-        return []; // Return an empty array in case of error
-      });
+    MenuSearchService.$inject = ['$http'];
+    function MenuSearchService($http) {
+      this.getMatchedMenuItems = function(searchTerm) {
+        var url = "https://coursera-jhu-default-rtdb.firebaseio.com/menu_items.json";
+        return $http.get(url)
+          .then(function(response) {
+            var foundItems = [];
+            for (var item in response.data) {
+              if (response.data[item].description.indexOf(searchTerm) !== -1) {
+                foundItems.push(response.data[item]);
+              }
+            }
+            return foundItems;
+          });
+      };
     }
   
-    MenuSearchService.$inject = ['$http', 'ApiBasePath'];
-    function MenuSearchService($http, ApiBasePath) {
-      var service = this;
-  
-      service.getMatchedMenuItems = getMatchedMenuItems;
-    }
-  
-    function MenuItemsDirective() {
+    function foundItemsDirective() {
       var ddo = {
+        restrict: 'E',
         templateUrl: 'foundItems.html',
         scope: {
-          foundItems: '<',
-          onRemove: '&'
+          found: '='
         },
-        controller: FoundItemsDirectiveController,
-        controllerAs: 'list',
-        bindToController: true
+        controller: function($scope) {
+          $scope.removeItem = function(index) {
+            $scope.$parent.narrowDown.removeItem(index);
+          };
+        },
+        bindToController: {
+          onRemove: '&'
+        }
       };
       return ddo;
-    }
-  
-    function FoundItemsDirectiveController() {
-      var list = this;
     }
   
   })();
