@@ -25,6 +25,10 @@
             MenuSearchService.getMatchedMenuItems(narrowDown.searchTerm)
                 .then(function (foundItems) {
                     narrowDown.found = foundItems;
+                })
+                .catch(function (error) {
+                    console.error('Error fetching data:', error);
+                    narrowDown.found = [];
                 });
         };
 
@@ -42,10 +46,16 @@
                 method: "GET",
                 url: (ApiBasePath + "/menu_items.json")
             }).then(function (result) {
+                if (!result || !result.data || !result.data.menu_items) {
+                    return []; // Return an empty array if the response is not as expected
+                }
                 var foundItems = result.data.menu_items.filter(function (item) {
                     return item.description.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1;
                 });
                 return foundItems;
+            }).catch(function(error) {
+                console.error('Error fetching data:', error);
+                return []; // Return an empty array in case of error
             });
         };
     }
