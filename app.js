@@ -10,20 +10,19 @@
     NarrowItDownController.$inject = ['MenuSearchService'];
     function NarrowItDownController(MenuSearchService) {
       var narrowDown = this;
-      narrowDown.searchTerm = ""; // Initialize searchTerm to an empty string
+      narrowDown.searchTerm = ""; // Initialize to an empty string
       narrowDown.found = [];
   
       narrowDown.getMenuItems = function() {
-        MenuSearchService.getMatchedMenuItems()
-          .then(function(response) {
-            if (response.data) {
-              console.log(response.data.searchTerm); // Log searchTerm after receiving data
-              var searchTerm = response.data.searchTerm.toLowerCase();  // Convert to lowercase here
-              // Proceed with search logic using searchTerm
-            } else {
-              // Handle case where response.data is undefined
-            }
-          });
+        if (narrowDown.searchTerm) { // Check if searchTerm has a value
+          MenuSearchService.getMatchedMenuItems(narrowDown.searchTerm)
+            .then(function(matchedItems) {
+              narrowDown.found = matchedItems;
+            });
+        } else {
+          // Handle case where searchTerm is empty
+          console.log("Please enter a search term");
+        }
       };
   
       narrowDown.removeItem = function(index) {
@@ -33,21 +32,29 @@
   
     MenuSearchService.$inject = ['$http'];
     function MenuSearchService($http) {
-      this.getMatchedMenuItems = function() {
-        var url = "https://coursera-jhu-default-rtdb.firebaseio.com/menu_items.json"; // Assuming you have an API call here
-        // Replace with your actual logic to fetch searchTerm and other data
+      this.getMatchedMenuItems = function(searchTerm) {
+        var url = "https://coursera-jhu-default-rtdb.firebaseio.com/menu_items.json"; // Replace with your actual API endpoint
+  
+        // Assuming your API response contains a property named 'searchTerm'
         return $http.get(url)
           .then(function(response) {
             if (response.data) {
-              return { searchTerm: response.data.searchTerm };  // Assuming searchTerm is a property within the response data
+              var searchTermFromResponse = response.data.searchTerm; // Access searchTerm from your API response structure
+              if (searchTermFromResponse) {
+                return { searchTerm: searchTermFromResponse.toLowerCase() }; // Convert to lowercase here
+              } else {
+                // Handle case where searchTerm is missing in the response
+                console.log("searchTerm not found in API response");
+                return {};
+              }
             } else {
-              // Handle case where response.data is undefined
+              // Handle case where response.data is undefined (e.g., network error)
+              console.log("Error fetching menu items");
               return {};
             }
           });
       };
     }
-
   
     function foundItemsDirective() {
       var ddo = {

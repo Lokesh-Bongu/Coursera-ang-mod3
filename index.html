@@ -6,28 +6,27 @@
   <title>Narrow Down Your Menu</title>
   <link rel="stylesheet" href="styles/bootstrap.min.css">
 
-  </head>
-  
-  <body>
-    <div ng-controller="NarrowItDownController as narrowDown">
-      <h1>Narrow It Down!</h1>
-      <input type="text" ng-model="narrowDown.searchTerm" placeholder="Enter a search term">
-      <button ng-click="narrowDown.getMenuItems()">Narrow It Down For Me!</button>
-  
-      <div ng-if="narrowDown.found.length > 0">
-        <h2>Found Items:</h2>
-        <ul found-items="narrowDown.found" on-remove="narrowDown.removeItem($index)"></ul>
-      </div>
-  
-      <div ng-if="narrowDown.found.length === 0 && narrowDown.searchTerm">
-        <h2>Nothing found for "{{narrowDown.searchTerm}}"</h2>
-      </div>
+</head>
+
+<body>
+  <div ng-controller="NarrowItDownController as narrowDown">
+    <h1>Narrow It Down!</h1>
+    <input type="text" ng-model="narrowDown.searchTerm" placeholder="Enter a search term">
+    <button ng-click="narrowDown.getMenuItems()">Narrow It Down For Me!</button>
+
+    <div ng-if="narrowDown.found.length > 0">
+      <h2>Found Items:</h2>
+      <ul found-items="narrowDown.found" on-remove="narrowDown.removeItem($index)"></ul>
     </div>
-  
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
-  
-    <script src="app.js"></script>
-  </body>
-  
-  </html>
-  
+
+    <div ng-if="narrowDown.found.length === 0 && narrowDown.searchTerm">
+      <h2>Nothing found for "{{narrowDown.searchTerm}}"</h2>
+    </div>
+  </div>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+
+  <script src="app.js"></script>
+</body>
+
+</html>
