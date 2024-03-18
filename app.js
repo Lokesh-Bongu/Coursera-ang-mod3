@@ -38,7 +38,7 @@
         // Assuming your API response contains a property named 'searchTerm'
         return $http.get(url)
           .then(function(response) {
-            console.log("response",response)
+            console.log("response",response.data.menu_items.name)
             if (response.data) {
               var searchTermFromResponse = response.data.name; // Access searchTerm from your API response structure
               if (searchTermFromResponse) {
