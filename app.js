@@ -14,15 +14,15 @@
       narrowDown.found = [];
   
       narrowDown.getMenuItems = function() {
-        if (narrowDown.searchTerm) { // Check if searchTerm has a value
-          MenuSearchService.getMatchedMenuItems(narrowDown.searchTerm)
-            .then(function(matchedItems) {
-              narrowDown.found = matchedItems;
-            });
-        } else {
-          // Handle case where searchTerm is empty
-          console.log("Please enter a search term");
-        }
+        MenuSearchService.getMatchedMenuItems()
+          .then(function(response) {
+            if (response.data) {
+              var searchTerm = response.data.searchTerm.toLowerCase(); // Convert to lowercase after data is received
+              // ... proceed with search logic using searchTerm
+            } else {
+              // Handle case where response.data is undefined
+            }
+          });
       };
   
       narrowDown.removeItem = function(index) {
@@ -32,23 +32,16 @@
   
     MenuSearchService.$inject = ['$http'];
     function MenuSearchService($http) {
-      this.getMatchedMenuItems = function(searchTerm) {
-        var url = "https://coursera-jhu-default-rtdb.firebaseio.com/menu_items.json";
-        searchTerm = searchTerm.toLowerCase(); // Convert search term to lowercase here
+      this.getMatchedMenuItems = function() {
+        var url = "https://coursera-jhu-default-rtdb.firebaseio.com/menu_items.json"; // Assuming you have an API call here
+        // Replace with your actual logic to fetch searchTerm and other data
         return $http.get(url)
           .then(function(response) {
-            if (response.data) {  // Check if response.data has a value
-              var foundItems = [];
-              for (var item in response.data) {
-                response.data[item].description = response.data[item].description.toLowerCase();
-                if (response.data[item].description.indexOf(searchTerm) !== -1) {
-                  foundItems.push(response.data[item]);
-                }
-              }
-              return foundItems;
+            if (response.data) {
+              return { searchTerm: response.data.searchTerm };  // Assuming searchTerm is a property within the response data
             } else {
               // Handle case where response.data is undefined
-              return []; // Or throw an error
+              return {};
             }
           });
       };
