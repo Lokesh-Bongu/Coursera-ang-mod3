@@ -1,6 +1,8 @@
-<ul>
-    <li ng-repeat="item in list.foundItems">
-      <p>{{ item.description }}</p>
-      <button ng-click="list.onRemove({index: $index})">Remove</button>
-    </li>
-  </ul>
+<ul ng-if="narrowDown.found.length > 0">  <li ng-repeat="item in narrowDown.found">
+    {{item.name}}
+    <button ng-click="narrowDown.removeItem($index)">Remove</button>
+  </li>
+</ul>
+<div ng-if="narrowDown.found.length === 0 && narrowDown.searchButtonClicked">
+  Nothing found for {{narrowDown.searchTerm}}
+</div>
