@@ -15,9 +15,7 @@
   
       narrowDown.getMenuItems = function() {
         if (narrowDown.searchTerm) { // Check if searchTerm has a value
-        var searchTerm = narrowDown.searchTerm.toLowerCase(); // Convert search term to lowercase
-          console.log("Lowercase search term:", searchTerm);
-          MenuSearchService.getMatchedMenuItems(searchTerm)
+          MenuSearchService.getMatchedMenuItems(narrowDown.searchTerm)
             .then(function(matchedItems) {
               narrowDown.found = matchedItems;
             });
@@ -36,15 +34,13 @@
     function MenuSearchService($http) {
       this.getMatchedMenuItems = function(searchTerm) {
         var url = "https://coursera-jhu-default-rtdb.firebaseio.com/menu_items.json";
+        searchTerm = searchTerm.toLowerCase(); // Convert search term to lowercase here
         return $http.get(url)
           .then(function(response) {
             if (response.data) {  // Check if response.data has a value
               var foundItems = [];
               for (var item in response.data) {
-                // Convert description to lowercase for case-insensitive search
                 response.data[item].description = response.data[item].description.toLowerCase();
-                console.log("Lowercase description:", response.data[item].description);
-
                 if (response.data[item].description.indexOf(searchTerm) !== -1) {
                   foundItems.push(response.data[item]);
                 }
