@@ -17,8 +17,9 @@
         MenuSearchService.getMatchedMenuItems()
           .then(function(response) {
             if (response.data) {
-              var searchTerm = response.data.searchTerm.toLowerCase(); // Convert to lowercase after data is received
-              // ... proceed with search logic using searchTerm
+              console.log(response.data.searchTerm); // Log searchTerm after receiving data
+              var searchTerm = response.data.searchTerm.toLowerCase();  // Convert to lowercase here
+              // Proceed with search logic using searchTerm
             } else {
               // Handle case where response.data is undefined
             }
@@ -46,6 +47,7 @@
           });
       };
     }
+
   
     function foundItemsDirective() {
       var ddo = {
