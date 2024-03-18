@@ -1,29 +1,24 @@
 <!doctype html>
 <html lang="en" ng-app="NarrowItDownApp">
 <head>
-    <meta charset="UTF-8">
-    <title>Narrow Down Your Menu Choice</title>
-    <link rel="stylesheet" href="styles/bootstrap.min.css">
-    <link rel="stylesheet" href="styles/styles.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
-    <script src="app.js"></script>
+  <meta charset="UTF-8">
+  <title>Narrow Down Your Menu Choice</title>
+  <link rel="stylesheet" href="styles/bootstrap.min.css">
+  <link rel="stylesheet" href="styles/styles.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+  <script src="app.js"></script>
 </head>
 <body>
 <div class="container" ng-controller="NarrowItDownController as narrowDown">
-    <h1>Narrow Down Your Chinese Menu Choice</h1>
+  <h1>Narrow Down Your Chinese Menu Choice</h1>
 
-    <div class="form-group">
-        <input type="text" placeholder="search term" class="form-control" ng-model="narrowDown.searchTerm">
-    </div>
-    <div class="form-group narrow-button">
-        <button class="btn btn-primary" ng-click="narrowDown.search()">Narrow It Down For Me!</button>
-    </div>
+  <div class="form-group">
+    <input type="text" placeholder="search term" class="form-control" ng-model="narrowDown.searchTerm">
+  </div>
+  <div class="form-group narrow-button">
+    <button class="btn btn-primary" ng-click="narrowDown.search()">Narrow It Down For Me!</button>
+  </div>
 
-    <found-items found-items="narrowDown.found" on-remove="narrowDown.removeItem(index)"></found-items>
-    
-    <div class="empty-message" ng-if="!narrowDown.found.length && narrowDown.searchTerm && narrowDown.searchButtonClicked">
-        <p>Nothing found</p>
-    </div>
-</div>
-</body>
-</html>
+  <menu-items found-items="narrowDown.found" on-remove="narrowDown.removeItem(index)"></menu-items>  <div class="empty-message" ng-if="!narrowDown.found.length && narrowDown.searchTerm && narrowDown.searchButtonClicked">
+    <p>Nothing found</p>
+  

@@ -1,7 +1,6 @@
-<div class="found-items">
-    <ul>
-        <li ng-repeat="item in list.foundItems">
-            <p>{{ item.description }}</p>
-        </li>
-    </ul>
-</div>
+<ul>
+    <li ng-repeat="item in list.foundItems">
+      <p>{{ item.description }}</p>
+      <button ng-click="list.onRemove({index: $index})">Remove</button>
+    </li>
+  </ul>
