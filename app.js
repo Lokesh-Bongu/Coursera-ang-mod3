@@ -10,7 +10,7 @@
     NarrowItDownController.$inject = ['MenuSearchService'];
     function NarrowItDownController(MenuSearchService) {
       var narrowDown = this;
-      narrowDown.searchTerm = "";
+      narrowDown.searchTerm = ""; // Initialize searchTerm to an empty string
       narrowDown.found = [];
   
       narrowDown.getMenuItems = function() {
