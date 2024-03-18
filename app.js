@@ -41,12 +41,12 @@
         narrowDown.found.splice(index, 1);
       };
     }
-  
+
     MenuSearchService.$inject = ['$http', 'ApiBasePath'];
     function MenuSearchService($http, ApiBasePath) {
       var service = this;
   
-      service.getMatchedMenuItems = function (searchTerm) {
+      function getMatchedMenuItems(searchTerm) {
         return $http({
           method: "GET",
           url: (ApiBasePath + "/menu_items.json")
@@ -54,15 +54,19 @@
           if (!result || !result.data || !result.data.menu_items) {
             return []; // Return an empty array if the response is not as expected
           }
+          var lowercaseSearchTerm = searchTerm.toLowerCase();
           var foundItems = result.data.menu_items.filter(function (item) {
-            return item.description.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1;
+            console.log("item",item)
+            var lowercaseDescription = item.description.toLowerCase();
+            return lowercaseDescription.indexOf(lowercaseSearchTerm) !== -1;
           });
           return foundItems;
+          console.log("foundItems",foundItems)
         }).catch(function(error) {
           console.error('Error fetching data:', error);
           return []; // Return an empty array in case of error
         });
-      };
+      }
     }
   
     function MenuItemsDirective() {
