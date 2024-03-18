@@ -7,11 +7,13 @@
       .directive('menuItems', MenuItemsDirective)
       .constant('ApiBasePath', 'https://coursera-jhu-default-rtdb.firebaseio.com');
   
-    NarrowItDownController.$inject = ['MenuSearchService'];
-    function NarrowItDownController(MenuSearchService) {
-      var narrowDown = this;
-      narrowDown.searchTerm = '';
-      narrowDown.found = [];
+      var app = angular.module('NarrowItDownApp', []);
+
+   app.controller('NarrowItDownController', ['$http', function($http) {
+   var narrowDown = this;
+   narrowDown.searchTerm = "";
+   narrowDown.found = []; // Initialize as an empty array
+
       narrowDown.searchButtonClicked = false;
       narrowDown.showLoader = false; // Flag to control loader visibility
   
