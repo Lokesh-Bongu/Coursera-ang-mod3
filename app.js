@@ -14,10 +14,15 @@
       narrowDown.found = [];
   
       narrowDown.getMenuItems = function() {
-        MenuSearchService.getMatchedMenuItems(narrowDown.searchTerm)
-          .then(function(matchedItems) {
-            narrowDown.found = matchedItems;
-          });
+        if (narrowDown.searchTerm) { // Check if searchTerm has a value
+          MenuSearchService.getMatchedMenuItems(narrowDown.searchTerm)
+            .then(function(matchedItems) {
+              narrowDown.found = matchedItems;
+            });
+        } else {
+          // Handle case where searchTerm is empty
+          console.log("Please enter a search term");
+        }
       };
   
       narrowDown.removeItem = function(index) {
@@ -31,13 +36,18 @@
         var url = "https://coursera-jhu-default-rtdb.firebaseio.com/menu_items.json";
         return $http.get(url)
           .then(function(response) {
-            var foundItems = [];
-            for (var item in response.data) {
-              if (response.data[item].description.indexOf(searchTerm) !== -1) {
-                foundItems.push(response.data[item]);
+            if (response.data) {  // Check if response.data has a value
+              var foundItems = [];
+              for (var item in response.data) {
+                if (response.data[item].description.indexOf(searchTerm) !== -1) {
+                  foundItems.push(response.data[item]);
+                }
               }
+              return foundItems;
+            } else {
+              // Handle case where response.data is undefined
+              return []; // Or throw an error
             }
-            return foundItems;
           });
       };
     }
