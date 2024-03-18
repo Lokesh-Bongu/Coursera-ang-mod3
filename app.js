@@ -15,6 +15,7 @@
   
       narrowDown.getMenuItems = function() {
         if (narrowDown.searchTerm) { // Check if searchTerm has a value
+            console.log("narrowDown.searchTerm",narrowDown.searchTerm)
           MenuSearchService.getMatchedMenuItems(narrowDown.searchTerm)
             .then(function(matchedItems) {
               narrowDown.found = matchedItems;
@@ -38,10 +39,13 @@
         // Assuming your API response contains a property named 'searchTerm'
         return $http.get(url)
           .then(function(response) {
+            console.log("response",response.data)
+            console.log("response",response.data.menu_items)
             console.log("response",response.data.menu_items.name)
             if (response.data) {
               var searchTermFromResponse = response.data.name; // Access searchTerm from your API response structure
               if (searchTermFromResponse) {
+                console.log("searchTermFromResponse",searchTermFromResponse)
                 return { searchTerm: searchTermFromResponse.toLowerCase() }; // Convert to lowercase here
               } else {
                 // Handle case where searchTerm is missing in the response
