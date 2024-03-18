@@ -15,7 +15,7 @@
   
       narrowDown.getMenuItems = function() {
         if (narrowDown.searchTerm) { // Check if searchTerm has a value
-          searchTerm = narrowDown.searchTerm.toLowerCase(); // Convert search term to lowercase
+        var searchTerm = narrowDown.searchTerm.toLowerCase(); // Convert search term to lowercase
           console.log("Lowercase search term:", searchTerm);
           MenuSearchService.getMatchedMenuItems(searchTerm)
             .then(function(matchedItems) {
