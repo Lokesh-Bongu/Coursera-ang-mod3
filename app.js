@@ -4,7 +4,7 @@
     angular.module('NarrowItDownApp', [])
       .controller('NarrowItDownController', NarrowItDownController)
       .service('MenuSearchService', MenuSearchService)
-      .directive('menuItems',MenuItemsDirective) // Directive renamed to menuItems
+      .directive('menuItems', MenuItemsDirective)
       .constant('ApiBasePath', 'https://coursera-jhu-default-rtdb.firebaseio.com');
   
     NarrowItDownController.$inject = ['MenuSearchService'];
@@ -13,22 +13,27 @@
       narrowDown.searchTerm = '';
       narrowDown.found = [];
       narrowDown.searchButtonClicked = false;
+      narrowDown.showLoader = false;  // Flag to control loader visibility
   
       narrowDown.search = function () {
         narrowDown.searchButtonClicked = true;
+        narrowDown.showLoader = true;  // Show loader while fetching data
   
         if (narrowDown.searchTerm.trim() === '') {
           narrowDown.found = [];
+          narrowDown.showLoader = false;  // Hide loader if search term is empty
           return;
         }
   
         MenuSearchService.getMatchedMenuItems(narrowDown.searchTerm)
           .then(function (foundItems) {
             narrowDown.found = foundItems;
+            narrowDown.showLoader = false;  // Hide loader after receiving data
           })
           .catch(function (error) {
             console.error('Error fetching data:', error);
             narrowDown.found = [];
+            narrowDown.showLoader = false;  // Hide loader in case of error
           });
       };
   
@@ -60,7 +65,7 @@
       };
     }
   
-    function MenuItemsDirective() { // Directive definition with new name
+    function MenuItemsDirective() {
       var ddo = {
         templateUrl: 'foundItems.html',
         scope: {
@@ -79,3 +84,4 @@
     }
   
   })();
+  
