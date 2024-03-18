@@ -38,13 +38,14 @@
         // Assuming your API response contains a property named 'searchTerm'
         return $http.get(url)
           .then(function(response) {
+            console.log("response",response)
             if (response.data) {
-              var searchTermFromResponse = response.data.searchTerm; // Access searchTerm from your API response structure
+              var searchTermFromResponse = response.data.name; // Access searchTerm from your API response structure
               if (searchTermFromResponse) {
                 return { searchTerm: searchTermFromResponse.toLowerCase() }; // Convert to lowercase here
               } else {
                 // Handle case where searchTerm is missing in the response
-                console.log("searchTerm not found in API response");
+                console.log("Name not found in API response");
                 return {};
               }
             } else {
