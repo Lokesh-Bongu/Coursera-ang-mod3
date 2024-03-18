@@ -42,6 +42,7 @@
       };
     }
     function getMatchedMenuItems(searchTerm) {
+        console.log("searchTerm",searchTerm)
         return $http({
           method: "GET",
           url: (ApiBasePath + "/menu_items.json")
@@ -51,9 +52,11 @@
           }
           var lowercaseSearchTerm = searchTerm.toLowerCase();
           var foundItems = result.data.menu_items.filter(function (item) {
+            console.log("items",item)
             var lowercaseDescription = item.description.toLowerCase();
             return lowercaseDescription.indexOf(lowercaseSearchTerm) !== -1;
           });
+          console.log("foundItems",foundItems)
           return foundItems;
         }).catch(function(error) {
           console.error('Error fetching data:', error);
@@ -73,7 +76,7 @@
             return []; // Return an empty array if the response is not as expected
           }
           var foundItems = result.data.menu_items.filter(function (item) {
-            console.log("Items",Items)
+            console.log("Items",item)
             return item.description.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1;
           });
           console.log("foundItems",foundItems)
