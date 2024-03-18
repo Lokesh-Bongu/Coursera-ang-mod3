@@ -1,24 +1,27 @@
-<!doctype html>
-<html lang="en" ng-app="NarrowItDownApp">
+<!DOCTYPE html>
+<html ng-app="NarrowItDownApp">
 <head>
-  <meta charset="UTF-8">
-  <title>Narrow Down Your Menu Choice</title>
-  <link rel="stylesheet" href="styles/bootstrap.min.css">
-  <link rel="stylesheet" href="styles/styles.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
-  <script src="app.js"></script>
+  <title>Narrow Down Your Menu</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYthpqZ5vBTi6qDbTSfhqLrXqjYCUmwaSjDjEVqRiQtT8FOIkEFWzIAuaIDyJyW" crossorigin="anonymous">
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>  <script src="app.js"></script>
 </head>
 <body>
-<div class="container" ng-controller="NarrowItDownController as narrowDown">
-  <h1>Narrow Down Your Chinese Menu Choice</h1>
-
-  <div class="form-group">
-    <input type="text" placeholder="search term" class="form-control" ng-model="narrowDown.searchTerm">
+  <div class="container">
+    <h1>Narrow Down Your Menu</h1>
+    <div class="form-group">
+      <input type="text" ng-model="narrowDown.searchTerm" placeholder="Search Term">
+      <button ng-click="narrowDown.search()" class="btn btn-primary">Search</button>
+      <div class="loader" ng-show="narrowDown.showLoader">Loading...</div>
+    </div>
+    <div ng-if="narrowDown.found.length === 0 && narrowDown.searchButtonClicked">
+      Nothing found for {{narrowDown.searchTerm}}
+    </div>
+    <ul ng-if="narrowDown.found.length > 0">
+      <li ng-repeat="item in narrowDown.found">
+        {{item.name}}
+        <button ng-click="narrowDown.removeItem($index)">Remove</button>
+      </li>
+    </ul>
   </div>
-  <div class="form-group narrow-button">
-    <button class="btn btn-primary" ng-click="narrowDown.search()">Narrow It Down For Me!</button>
-  </div>
-
-  <menu-items found-items="narrowDown.found" on-remove="narrowDown.removeItem(index)"></menu-items>  <div class="empty-message" ng-if="!narrowDown.found.length && narrowDown.searchTerm && narrowDown.searchButtonClicked">
-    <p>Nothing found</p>
-  
+</body>
+</html>
