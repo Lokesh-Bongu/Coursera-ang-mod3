@@ -1,5 +1,3 @@
-// app.js
-
 (function () {
     'use strict';
 
@@ -14,8 +12,11 @@
         var narrowDown = this;
         narrowDown.searchTerm = '';
         narrowDown.found = [];
+        narrowDown.searchButtonClicked = false;
 
         narrowDown.search = function () {
+            narrowDown.searchButtonClicked = true;
+
             if (narrowDown.searchTerm.trim() === '') {
                 narrowDown.found = [];
                 return;

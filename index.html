@@ -1,5 +1,3 @@
-<!-- index.html -->
-
 <!doctype html>
 <html lang="en" ng-app="NarrowItDownApp">
 <head>
@@ -21,7 +19,7 @@
 
     <found-items found-items="narrowDown.found" on-remove="narrowDown.removeItem(index)"></found-items>
     
-    <div class="empty-message" ng-if="!narrowDown.found.length && narrowDown.searchTerm">
+    <div class="empty-message" ng-if="!narrowDown.found.length && narrowDown.searchTerm && narrowDown.searchButtonClicked">
         <p>Nothing found</p>
     </div>
 </div>

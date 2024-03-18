@@ -1,11 +1,11 @@
-<div class="list-group" ng-if="list.foundItems.length > 0">
-    <div class="list-group-item" ng-repeat="item in list.foundItems">
-        <h4 class="list-group-item-heading">{{ item.name }}</h4>
-        <p class="list-group-item-text">{{ item.short_name }}, {{ item.description }}</p>
-        <button class="btn btn-danger" ng-click="list.onRemove({ index: $index })">Don't want this one!</button>
-    </div>
-</div>
-
-<div class="alert alert-warning" role="alert" ng-if="list.foundItems.length === 0">
-    Nothing found
+<div class="list">
+    <ul>
+        <li ng-repeat="item in list.foundItems">
+            <div class="item">
+                <h3>{{ item.name }}</h3>
+                <p>{{ item.description }}</p>
+                <button class="btn btn-danger" ng-click="list.onRemove({index: $index})">Don't want this one!</button>
+            </div>
+        </li>
+    </ul>
 </div>
