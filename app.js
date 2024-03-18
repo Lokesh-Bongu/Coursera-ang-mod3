@@ -5,7 +5,7 @@
         .controller('NarrowItDownController', NarrowItDownController)
         .service('MenuSearchService', MenuSearchService)
         .directive('foundItems', FoundItemsDirective)
-        .constant('ApiBasePath', 'https://davids-restaurant.herokuapp.com');
+        .constant('ApiBasePath', 'https://coursera-jhu-default-rtdb.firebaseio.com');
 
     NarrowItDownController.$inject = ['MenuSearchService'];
     function NarrowItDownController(MenuSearchService) {
