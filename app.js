@@ -1,7 +1,7 @@
 (function () {
     'use strict';
   
-    angular.module('NarrowItDownApp', [])
+    angular.module('NarrowItDownApp', ['ngResource']) 
       .controller('NarrowItDownController', NarrowItDownController)
       .service('MenuSearchService', MenuSearchService)
       .directive('menuItems', MenuItemsDirective)
