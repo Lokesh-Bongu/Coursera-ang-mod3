@@ -33,24 +33,25 @@
     MenuSearchService.$inject = ['$http'];
     function MenuSearchService($http) {
       this.getMatchedMenuItems = function(searchTerm) {
-        var url = "https://coursera-jhu-default-rtdb.firebaseio.com/menu_items.json"; // Replace with your actual API endpoint
+        // Replace with your actual API endpoint URL
+        var url = "https://your-api-endpoint.com/menu_items"; // Example placeholder
   
-        // Assuming your API response contains a property named 'searchTerm'
         return $http.get(url)
           .then(function(response) {
             if (response.data) {
-              var searchTermFromResponse = response.data.searchTerm; // Access searchTerm from your API response structure
-              if (searchTermFromResponse) {
-                return { searchTerm: searchTermFromResponse.toLowerCase() }; // Convert to lowercase here
-              } else {
-                // Handle case where searchTerm is missing in the response
-                console.log("searchTerm not found in API response");
-                return {};
-              }
+              var filteredItems = [];
+              // Assuming your API response is an array of objects:
+              angular.forEach(response.data, function(item) {
+                if (item.name.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1 ||
+                    item.description.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1) {
+                  filteredItems.push(item); // Add matching items to filteredItems array
+                }
+              });
+              return filteredItems;
             } else {
               // Handle case where response.data is undefined (e.g., network error)
               console.log("Error fetching menu items");
-              return {};
+              return [];
             }
           });
       };
@@ -62,14 +63,6 @@
         templateUrl: 'foundItems.html',
         scope: {
           found: '='
-        },
-        controller: function($scope) {
-          $scope.removeItem = function(index) {
-            $scope.$parent.narrowDown.removeItem(index);
-          };
-        },
-        bindToController: {
-          onRemove: '&'
         }
       };
       return ddo;
