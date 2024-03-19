@@ -4,24 +4,21 @@
   
     angular.module('NarrowItDownApp', [])
       .controller('NarrowItDownController', NarrowItDownController)
-      .service('MenuSearchService', MenuSearchService)
-      .directive('foundItems', foundItemsDirective);
+      .service('MenuSearchService', MenuSearchService);
   
     NarrowItDownController.$inject = ['MenuSearchService'];
     function NarrowItDownController(MenuSearchService) {
       var narrowDown = this;
-      narrowDown.searchTerm = ""; // Initialize to an empty string
+      narrowDown.searchTerm = "";
       narrowDown.found = [];
   
       narrowDown.getMenuItems = function() {
-        if (narrowDown.searchTerm) { // Check if searchTerm has a value
-            console.log("narrowDown.searchTerm",narrowDown.searchTerm)
+        if (narrowDown.searchTerm) {
           MenuSearchService.getMatchedMenuItems(narrowDown.searchTerm)
             .then(function(matchedItems) {
               narrowDown.found = matchedItems;
             });
         } else {
-          // Handle case where searchTerm is empty
           console.log("Please enter a search term");
         }
       };
@@ -34,50 +31,34 @@
     MenuSearchService.$inject = ['$http'];
     function MenuSearchService($http) {
       this.getMatchedMenuItems = function(searchTerm) {
-        var url = "https://coursera-jhu-default-rtdb.firebaseio.com/menu_items.json"; // Replace with your actual API endpoint
+        // Replace with your actual API endpoint URL
+        var url = "https://your-api-endpoint.com/menu_items";
   
-        // Assuming your API response contains a property named 'searchTerm'
         return $http.get(url)
           .then(function(response) {
-            console.log("response",response.data)
-            console.log("response",response.data.menu_items)
-            console.log("response",response.data.menu_items.name)
             if (response.data) {
-              var searchTermFromResponse = response.data.name; // Access searchTerm from your API response structure
-              if (searchTermFromResponse) {
-                console.log("searchTermFromResponse",searchTermFromResponse)
-                return { searchTerm: searchTermFromResponse.toLowerCase() }; // Convert to lowercase here
-              } else {
-                // Handle case where searchTerm is missing in the response
-                console.log("Name not found in API response");
-                return {};
+              var filteredItems = [];
+              // Loop through each category (A and B)
+              for (var category in response.data) {
+                // Access the menu items array for the current category
+                var items = response.data[category].menu_items;
+                // Loop through each menu item in the current category
+                for (var i = 0; i < items.length; i++) {
+                  var item = items[i];
+                  var searchTerm = searchTerm.toLowerCase(); // Convert search term to lowercase for case-insensitive matching
+                  if (item.description.toLowerCase().indexOf(searchTerm) !== -1 ||
+                      item.name.toLowerCase().indexOf(searchTerm) !== -1) {
+                    filteredItems.push(item); // Add matching items to filteredItems array
+                  }
+                }
               }
+              return filteredItems;
             } else {
-              // Handle case where response.data is undefined (e.g., network error)
               console.log("Error fetching menu items");
-              return {};
+              return [];
             }
           });
       };
-    }
-  
-    function foundItemsDirective() {
-      var ddo = {
-        restrict: 'E',
-        templateUrl: 'foundItems.html',
-        scope: {
-          found: '='
-        },
-        controller: function($scope) {
-          $scope.removeItem = function(index) {
-            $scope.$parent.narrowDown.removeItem(index);
-          };
-        },
-        bindToController: {
-          onRemove: '&'
-        }
-      };
-      return ddo;
     }
   
   })();
