@@ -10,19 +10,19 @@
     
       <h1>Narrow It Down!</h1>
     
-      <div class="search-box">
+      <div>
         <input type="text" ng-model="narrowDown.searchTerm" placeholder="Search for menu items...">
-        <button ng-click="narrowDown.getMenuItems()">Search</button>
+        <button ng-click="narrowDown.getMenuItems()">Narrow It Down For Me!</button>
       </div>
     
       <div ng-if="narrowDown.found.length === 0">
-        No items found for "{{narrowDown.searchTerm}}"
+        Nothing found.
       </div>
     
       <ul ng-if="narrowDown.found.length > 0">
         <li ng-repeat="item in narrowDown.found">
           {{item.name}} ({{item.short_name}}) - {{item.description}}
-          <button ng-click="narrowDown.removeItem($index)">Remove</button>
+          <button ng-click="narrowDown.removeItem($index)">Don't want this one!</button>
         </li>
       </ul>
     

@@ -4,7 +4,8 @@
   
     angular.module('NarrowItDownApp', [])
       .controller('NarrowItDownController', NarrowItDownController)
-      .service('MenuSearchService', MenuSearchService);
+      .service('MenuSearchService', MenuSearchService)
+      .directive('foundItems', foundItemsDirective);
   
     NarrowItDownController.$inject = ['MenuSearchService'];
     function NarrowItDownController(MenuSearchService) {
@@ -31,26 +32,20 @@
     MenuSearchService.$inject = ['$http'];
     function MenuSearchService($http) {
       this.getMatchedMenuItems = function(searchTerm) {
-        // Replace with your actual API endpoint URL
         var url = "https://coursera-jhu-default-rtdb.firebaseio.com/menu_items.json";
   
         return $http.get(url)
           .then(function(response) {
             if (response.data) {
               var filteredItems = [];
-              // Loop through each category (A and B)
+              // Loop through each category's menu_items array
               for (var category in response.data) {
-                // Access the menu items array for the current category
-                var items = response.data[category].menu_items;
-                console.log("items",items)
-                // Loop through each menu item in the current category
-                for (var i = 0; i < items.length; i++) {
-                  var item = items[i];
-                  var searchTerm = searchTerm.toLowerCase(); // Convert search term to lowercase for case-insensitive matching
-                  console.log("searchTerm",searchTerm)
-                  if (item.description.toLowerCase().indexOf(searchTerm) !== -1 ||
-                      item.name.toLowerCase().indexOf(searchTerm) !== -1) {
-                    filteredItems.push(item); // Add matching items to filteredItems array
+                for (var i = 0; i < response.data[category].menu_items.length; i++) {
+                  var item = response.data[category].menu_items[i];
+                  // Check if description (or name) contains the search term (case-insensitive)
+                  if (item.description && item.description.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1 ||
+                      item.name && item.name.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1) {
+                    filteredItems.push(item);
                   }
                 }
               }
@@ -61,6 +56,22 @@
             }
           });
       };
+    }
+  
+    function foundItemsDirective() {
+      var ddo = {
+        restrict: 'E',
+        scope: {
+          found: '='
+        },
+        template: '<ul><li ng-repeat="item in found"> {{item.name}} ({{item.short_name}}) - {{item.description}} <button ng-click="onRemove({index: $index})">Don\'t want this one!</button></li></ul>',
+        link: function(scope, element, attrs) {
+          scope.onRemove = function(data) {
+            scope.$parent.narrowDown.removeItem(data.index);
+          };
+        }
+      };
+      return ddo;
     }
   
   })();
