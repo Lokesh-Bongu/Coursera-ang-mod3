@@ -65,12 +65,18 @@
     function foundItemsDirective() {
       var ddo = {
         restrict: 'E',
-        scope: {
+        scope: { // Add closing parenthesis here
           found: '='
         },
         template: '<ul><li ng-repeat="item in found"> {{item.name}} ({{item.short_name}}) - {{item.description}} <button ng-click="onRemove({index: $index})">Don\'t want this one!</button></li></ul>',
         link: function(scope, element, attrs) {
           scope.onRemove = function(data) {
             scope.$parent.narrowDown.removeItem(data.index);
-          
+          };
+        }
+      };
+      return ddo;
+    }
+  
+  })();
   
