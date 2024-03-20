@@ -42,10 +42,12 @@
               for (var category in response.data) {
                 // Access the menu items array for the current category
                 var items = response.data[category].menu_items;
+                console.log("items",items)
                 // Loop through each menu item in the current category
                 for (var i = 0; i < items.length; i++) {
                   var item = items[i];
                   var searchTerm = searchTerm.toLowerCase(); // Convert search term to lowercase for case-insensitive matching
+                  console.log("searchTerm",searchTerm)
                   if (item.description.toLowerCase().indexOf(searchTerm) !== -1 ||
                       item.name.toLowerCase().indexOf(searchTerm) !== -1) {
                     filteredItems.push(item); // Add matching items to filteredItems array
