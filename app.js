@@ -33,19 +33,22 @@
     function MenuSearchService($http) {
       this.getMatchedMenuItems = function(searchTerm) {
         var url = "https://coursera-jhu-default-rtdb.firebaseio.com/menu_items.json";
-  
+        console.log("hellllo")
         return $http.get(url)
           .then(function(response) {
             if (response.data) {
+                console.log("response.data",response.data)
               var filteredItems = [];
               // Loop through each category's menu_items array
               for (var category in response.data) {
                 for (var i = 0; i < response.data[category].menu_items.length; i++) {
                   var item = response.data[category].menu_items[i];
                   // Check if description (or name) contains the search term (case-insensitive)
+                  console.log("item",item)
                   if (item.description && item.description.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1 ||
                       item.name && item.name.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1) {
                     filteredItems.push(item);
+                    console.log("filteredItems",filteredItems)
                   }
                 }
               }
