@@ -32,7 +32,7 @@
     function MenuSearchService($http) {
       this.getMatchedMenuItems = function(searchTerm) {
         // Replace with your actual API endpoint URL
-        var url = "https://your-api-endpoint.com/menu_items";
+        var url = "https://coursera-jhu-default-rtdb.firebaseio.com/menu_items.json";
   
         return $http.get(url)
           .then(function(response) {
