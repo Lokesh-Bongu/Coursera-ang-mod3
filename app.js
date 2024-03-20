@@ -15,6 +15,7 @@
   
       narrowDown.getMenuItems = function() {
         if (narrowDown.searchTerm) {
+          console.log("Search term:", narrowDown.searchTerm); // Log search term
           MenuSearchService.getMatchedMenuItems(narrowDown.searchTerm)
             .then(function(matchedItems) {
               narrowDown.found = matchedItems;
@@ -33,25 +34,25 @@
     function MenuSearchService($http) {
       this.getMatchedMenuItems = function(searchTerm) {
         var url = "https://coursera-jhu-default-rtdb.firebaseio.com/menu_items.json";
-        console.log("hellllo")
+  
+        console.log("Making HTTP request to:", url); // Log request URL
+  
         return $http.get(url)
           .then(function(response) {
             if (response.data) {
-                console.log("response.data",response.data)
               var filteredItems = [];
               // Loop through each category's menu_items array
               for (var category in response.data) {
                 for (var i = 0; i < response.data[category].menu_items.length; i++) {
                   var item = response.data[category].menu_items[i];
                   // Check if description (or name) contains the search term (case-insensitive)
-                  console.log("item",item)
                   if (item.description && item.description.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1 ||
                       item.name && item.name.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1) {
                     filteredItems.push(item);
-                    console.log("filteredItems",filteredItems)
                   }
                 }
               }
+              console.log("Found items:", filteredItems.length); // Log number of found items
               return filteredItems;
             } else {
               console.log("Error fetching menu items");
@@ -71,11 +72,5 @@
         link: function(scope, element, attrs) {
           scope.onRemove = function(data) {
             scope.$parent.narrowDown.removeItem(data.index);
-          };
-        }
-      };
-      return ddo;
-    }
-  
-  })();
+          
   
