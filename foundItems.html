@@ -1,5 +1,4 @@
-<li ng-repeat="item in found">
-    {{item.name}} ({{item.short_name}}) - {{item.description}}
+<li ng-repeat="item in items">
+    {{ item.name }}, ({{ item.short_name }}) - {{ item.description }}
     <button ng-click="removeItem($index)">Don't want this one!</button>
   </li>
-  

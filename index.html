@@ -3,29 +3,21 @@
   <head>
     <title>Narrow It Down!</title>
     <link rel="stylesheet" href="styles/bootstrap.min.css">
-      <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
-      <script src="app.js"></script>
     </head>
     <body>
+        <h1>Narrow It Down for Me!</h1>
+        <input type="text" ng-model="searchTerm" placeholder="Search for something in the menu...">
+        <button ng-click="findItems()">Narrow It Down!</button>
+        <br>
     
-      <h1>Narrow It Down!</h1>
+        <div ng-if="found.length === 0">
+            Nothing found.
+        </div>
     
-      <div>
-        <input type="text" ng-model="narrowDown.searchTerm" placeholder="Search for menu items...">
-        <button ng-click="narrowDown.getMenuItems()">Narrow It Down For Me!</button>
-      </div>
+        <ul found-items items="found" on-remove="removeItem($index)"></ul>
     
-      <div ng-if="narrowDown.found.length === 0">
-        Nothing found.
-      </div>
-    
-      <ul ng-if="narrowDown.found.length > 0">
-        <li ng-repeat="item in narrowDown.found">
-          {{item.name}} ({{item.short_name}}) - {{item.description}}
-          <button ng-click="narrowDown.removeItem($index)">Don't want this one!</button>
-        </li>
-      </ul>
-    
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+        <script src="app.js"></script>
     </body>
     </html>
     
