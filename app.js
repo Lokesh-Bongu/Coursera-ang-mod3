@@ -26,6 +26,8 @@
             .then(function (foundItems) {
                 narrowCtrl.found = foundItems;
                 narrowCtrl.nothingFound = narrowCtrl.found.length === 0;
+                console.log("Number of items found:", narrowCtrl.found.length);
+                console.log("Nothing found:", narrowCtrl.nothingFound);
             });
         };
 
