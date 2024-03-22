@@ -21,7 +21,6 @@
 
             MenuSearchService.getMatchedMenuItems(narrowCtrl.searchTerm)
             .then(function (foundItems) {
-                console.log("foundItems",foundItems)
                 narrowCtrl.found = foundItems;
             });
         };
@@ -36,16 +35,23 @@
         var service = this;
 
         service.getMatchedMenuItems = function (searchTerm) {
-            console.log("search",searchTerm)
             return $http({
                 method: "GET",
                 url: ApiBasePath
             }).then(function (response) {
                 var foundItems = [];
-                console.log("resp",response,searchTerm)
-                for (var i = 0; i < response.data.length; i++) {
-                    if (response.data[i].description.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1) {
-                        foundItems.push(response.data[i]);
+
+                for (var key in response.data) {
+                    if (response.data.hasOwnProperty(key)) {
+                        var category = response.data[key];
+                        if (category.hasOwnProperty('menu_items')) {
+                            var menuItems = category.menu_items;
+                            for (var i = 0; i < menuItems.length; i++) {
+                                if (menuItems[i].description.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1) {
+                                    foundItems.push(menuItems[i]);
+                                }
+                            }
+                        }
                     }
                 }
 
