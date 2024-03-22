@@ -3,21 +3,15 @@
   <head>
     <title>Narrow It Down!</title>
     <link rel="stylesheet" href="styles/bootstrap.min.css">
-    </head>
-    <body>
-        <h1>Narrow It Down for Me!</h1>
-        <input type="text" ng-model="searchTerm" placeholder="Search for something in the menu...">
-        <button ng-click="findItems()">Narrow It Down!</button>
-        <br>
-    
-        <div ng-if="found.length === 0">
-            Nothing found.
-        </div>
-    
-        <ul found-items items="found" on-remove="removeItem($index)"></ul>
-    
         <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
         <script src="app.js"></script>
+    </head>
+    <body>
+        <div ng-controller="NarrowItDownController as narrowCtrl">
+            <input type="text" ng-model="narrowCtrl.searchTerm" placeholder="Enter search term">
+            <button ng-click="narrowCtrl.narrowItDown()">Narrow It Down For Me!</button>
+            <found-items items="narrowCtrl.found" on-remove="narrowCtrl.removeItem(index)"></found-items>
+        </div>
     </body>
     </html>
     

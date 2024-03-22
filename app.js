@@ -1,63 +1,76 @@
 (function () {
     'use strict';
-    
+
     angular.module('NarrowItDownApp', [])
     .controller('NarrowItDownController', NarrowItDownController)
     .service('MenuSearchService', MenuSearchService)
-    .directive('foundItems', foundItems);
-    
-    function NarrowItDownController($http, MenuSearchService) {
-      var ctrl = this;
-    
-      ctrl.searchTerm = "";
-      ctrl.found = [];
-    
-      ctrl.findItems = function () {
-        MenuSearchService.getMatchedMenuItems(ctrl.searchTerm)
-        .then(function (matchedItems) {
-          ctrl.found = matchedItems;
-        });
-      };
-    
-      ctrl.removeItem = function (itemIndex) {
-        ctrl.found.splice(itemIndex, 1);
-      };
-    }
-    
-    MenuSearchService.$inject = ['$http'];
-    function MenuSearchService($http) {
-      this.getMatchedMenuItems = function (searchTerm) {
-        return $http.get("https://coursera-jhu-default-rtdb.firebaseio.com/menu_items.json")
-          .then(function (response) {
-            var foundItems = [];
-            var items = response.data;
-            console.log("response.data",response.data)
-            for (var i = 0; i < items.length; i++) {
-              var description = items[i].description.toLowerCase();
-              if (description.indexOf(searchTerm.toLowerCase()) !== -1) {
-                foundItems.push(items[i]);
-              }
+    .directive('foundItems', FoundItemsDirective)
+    .constant('ApiBasePath', "https://coursera-jhu-default-rtdb.firebaseio.com/menu_items.json");
+
+    NarrowItDownController.$inject = ['MenuSearchService'];
+    function NarrowItDownController(MenuSearchService) {
+        var narrowCtrl = this;
+        narrowCtrl.searchTerm = "";
+        narrowCtrl.found = [];
+
+        narrowCtrl.narrowItDown = function () {
+            if (narrowCtrl.searchTerm.trim() === "") {
+                narrowCtrl.found = [];
+                return;
             }
-    
-            return foundItems;
-          });
-      };
+
+            MenuSearchService.getMatchedMenuItems(narrowCtrl.searchTerm)
+            .then(function (foundItems) {
+                console.log("foundItems",foundItems)
+                narrowCtrl.found = foundItems;
+            });
+        };
+
+        narrowCtrl.removeItem = function (index) {
+            narrowCtrl.found.splice(index, 1);
+        };
     }
-    
-    function foundItems() {
-      return {
-        restrict: 'E',
-        scope: {
-          items: '<'
-        },
-        templateUrl: 'foundItems.html',
-        controller: function($scope) {
-          $scope.removeItem = function(itemIndex) {
-            $scope.$parent.removeItem(itemIndex);
-          };
-        }
-      };
+
+    MenuSearchService.$inject = ['$http', 'ApiBasePath'];
+    function MenuSearchService($http, ApiBasePath) {
+        var service = this;
+
+        service.getMatchedMenuItems = function (searchTerm) {
+            console.log("search",searchTerm)
+            return $http({
+                method: "GET",
+                url: ApiBasePath
+            }).then(function (response) {
+                var foundItems = [];
+                console.log("resp",response,searchTerm)
+                for (var i = 0; i < response.data.length; i++) {
+                    if (response.data[i].description.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1) {
+                        foundItems.push(response.data[i]);
+                    }
+                }
+
+                return foundItems;
+            });
+        };
     }
-    
-    })();
-    
+
+    function FoundItemsDirective() {
+        var ddo = {
+            templateUrl: 'foundItems.html',
+            scope: {
+                items: '<',
+                onRemove: '&'
+            },
+            controller: FoundItemsDirectiveController,
+            controllerAs: 'foundItemsCtrl',
+            bindToController: true
+        };
+
+        return ddo;
+    }
+
+    function FoundItemsDirectiveController() {
+        var foundItemsCtrl = this;
+    }
+
+})();
