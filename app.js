@@ -18,6 +18,7 @@
             if (narrowCtrl.searchTerm.trim() === "") {
                 narrowCtrl.found = [];
                 narrowCtrl.nothingFound = true;
+                console.log("not Found")
                 return;
             }
 
