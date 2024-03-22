@@ -18,7 +18,6 @@
             if (narrowCtrl.searchTerm.trim() === "") {
                 narrowCtrl.found = [];
                 narrowCtrl.nothingFound = true;
-                console.log("not Found")
                 return;
             }
 
@@ -26,8 +25,6 @@
             .then(function (foundItems) {
                 narrowCtrl.found = foundItems;
                 narrowCtrl.nothingFound = narrowCtrl.found.length === 0;
-                console.log("Number of items found:", narrowCtrl.found.length);
-                console.log("Nothing found:", narrowCtrl.nothingFound);
             });
         };
 
@@ -71,7 +68,8 @@
             templateUrl: 'foundItems.html',
             scope: {
                 items: '<',
-                onRemove: '&'
+                onRemove: '&',
+                nothingFound: '<' // Bind nothingFound to directive's scope
             },
             controller: FoundItemsDirectiveController,
             controllerAs: 'foundItemsCtrl',
