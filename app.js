@@ -31,7 +31,7 @@
           .then(function (response) {
             var foundItems = [];
             var items = response.data;
-    
+            console.log("response.data",response.data)
             for (var i = 0; i < items.length; i++) {
               var description = items[i].description.toLowerCase();
               if (description.indexOf(searchTerm.toLowerCase()) !== -1) {
