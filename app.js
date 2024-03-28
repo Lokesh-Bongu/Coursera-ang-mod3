@@ -12,19 +12,19 @@
         var narrowCtrl = this;
         narrowCtrl.searchTerm = "";
         narrowCtrl.found = [];
-        narrowCtrl.nothingFound = false;
+        narrowCtrl.nothingFound = false; // Initialize nothingFound to false
 
         narrowCtrl.narrowItDown = function () {
             if (narrowCtrl.searchTerm.trim() === "") {
                 narrowCtrl.found = [];
-                narrowCtrl.nothingFound = true;
+                narrowCtrl.nothingFound = true; // Set nothingFound to true when search term is empty
                 return;
             }
 
             MenuSearchService.getMatchedMenuItems(narrowCtrl.searchTerm)
             .then(function (foundItems) {
                 narrowCtrl.found = foundItems;
-                narrowCtrl.nothingFound = narrowCtrl.found.length === 0;
+                narrowCtrl.nothingFound = narrowCtrl.found.length === 0; // Set nothingFound based on found items
             });
         };
 
